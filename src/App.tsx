@@ -7,6 +7,7 @@ import { ExternalLink, ShoppingBag } from 'lucide-react';
 import { cn } from './utils/cn';
 
 // الصفحات الموجودة فعلياً في المشروع
+import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
@@ -330,6 +331,12 @@ export default function App() {
         );
 
       case '/':
+        return (
+          <MainLayout currentPath={currentPath} navigate={navigate}>
+            <HomePage navigate={navigate} />
+          </MainLayout>
+        );
+
       case '/shop':
       default:
         return (
