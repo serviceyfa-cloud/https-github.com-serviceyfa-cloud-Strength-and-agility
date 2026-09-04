@@ -72,6 +72,40 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigateToShop }) => {
   );
 };
 
+interface NotFoundPageProps {
+  onNavigateHome: () => void;
+}
+
+const NotFoundPage: React.FC<NotFoundPageProps> = ({ onNavigateHome }) => {
+  return (
+    <div className="w-full py-16 sm:py-24 flex-1 flex items-center bg-[#FFFFFF] text-start" dir="rtl">
+      <Container>
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-8 sm:p-12">
+            <span className="text-xs sm:text-sm font-bold text-[#1257D6] tracking-wide block mb-3 select-none">
+              404
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mb-3 tracking-tight">
+              الصفحة غير موجودة
+            </h1>
+            <p className="text-sm sm:text-base text-[#475569] mb-8 leading-relaxed">
+              عذراً، الصفحة التي تحاول الوصول إليها غير متاحة أو قد تم نقلها.
+            </p>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={onNavigateHome}
+              className="min-w-[160px]"
+            >
+              العودة للرئيسية
+            </Button>
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
+};
+
 interface AdminLayoutProps {
   children: React.ReactNode;
   currentPath: string;
@@ -338,10 +372,16 @@ export default function App() {
         );
 
       case '/shop':
-      default:
         return (
           <MainLayout currentPath={currentPath} navigate={navigate}>
             <ShopPage />
+          </MainLayout>
+        );
+
+      default:
+        return (
+          <MainLayout currentPath={currentPath} navigate={navigate}>
+            <NotFoundPage onNavigateHome={() => navigate('/')} />
           </MainLayout>
         );
     }
