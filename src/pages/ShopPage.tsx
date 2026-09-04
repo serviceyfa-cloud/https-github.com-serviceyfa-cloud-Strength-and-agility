@@ -90,11 +90,11 @@ export const ShopPage: React.FC<ShopPageProps> = ({ products = [] }) => {
           </div>
         </section>
 
-        {/* منطقة المنتجات والعروض مع معرّف العروض للربط الملاحي */}
+        {/* منطقة المنتجات والمحتوى التجاري (تستقبل رابط الربط الملاحي) */}
         <section
           id="offers"
           className="scroll-mt-24"
-          aria-label="قائمة المنتجات والعروض"
+          aria-label="قائمة المنتجات"
         >
           <ProductGrid items={products}>
             {products.length === 0 && (
