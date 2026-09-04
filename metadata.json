@@ -1,0 +1,6 @@
+{
+  "name": "الرشاقة والقوة",
+  "description": "متجر إلكتروني رياضي متكامل للأدوات والملابس والمكملات الرياضية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
