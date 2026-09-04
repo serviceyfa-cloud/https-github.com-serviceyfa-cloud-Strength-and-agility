@@ -60,14 +60,14 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         ref={ref}
         variant="interactive"
         className={cn(
-          'group flex flex-col h-full overflow-hidden rounded-xl border-[#E5E1DA] bg-[#FFFFFF] text-start select-none',
+          'group flex flex-col h-full overflow-hidden rounded-xl border-[#E2E8F0] hover:border-[#CBD5E1] bg-[#FFFFFF] text-start select-none shadow-none',
           !inStock && 'opacity-80',
           className
         )}
         {...props}
       >
         {/* منطقة صورة المنتج (Fixed Aspect Ratio) */}
-        <div className="relative aspect-square w-full overflow-hidden bg-[#FAF8F5] border-b border-[#E5E1DA]">
+        <div className="relative aspect-square w-full overflow-hidden bg-[#F8FAFC] border-b border-[#E2E8F0]">
           {/* شارات الحالة الاختيارية */}
           <div className="absolute top-2.5 start-2.5 z-10 flex flex-col gap-1.5 pointer-events-none">
             {!inStock ? (
@@ -92,15 +92,15 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               }}
               className={cn(
                 'absolute top-2 end-2 z-10 min-w-[48px] min-h-[48px] p-3 inline-flex items-center justify-center rounded-lg',
-                'bg-[#FFFFFF]/90 hover:bg-[#FFFFFF] border border-[#E5E1DA] text-[#161A18]',
+                'bg-[#FFFFFF]/90 hover:bg-[#FFFFFF] border border-[#E2E8F0] text-[#0F172A]',
                 'transition-colors duration-150 ease-in-out',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]'
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]'
               )}
             >
               <Heart
                 className={cn(
                   'w-4 h-4 transition-colors',
-                  isWishlisted ? 'fill-[#B93834] text-[#B93834]' : 'text-[#4B534E]'
+                  isWishlisted ? 'fill-[#DC2626] text-[#DC2626]' : 'text-[#64748B]'
                 )}
                 aria-hidden="true"
               />
@@ -117,7 +117,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
           {/* طبقة شفافة ناعمة للمنتجات غير المتوفرة */}
           {!inStock && (
-            <div className="absolute inset-0 bg-[#FAF8F5]/60 pointer-events-none" aria-hidden="true" />
+            <div className="absolute inset-0 bg-[#FFFFFF]/70 pointer-events-none" aria-hidden="true" />
           )}
         </div>
 
@@ -125,23 +125,23 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
           <div className="flex flex-col gap-1.5">
             {subtitle && (
-              <span className="text-[11px] font-medium text-[#1257D6] tracking-wide">
+              <span className="text-[11px] font-semibold text-[#1257D6] tracking-wide">
                 {subtitle}
               </span>
             )}
 
-            <h3 className="text-sm sm:text-base font-semibold text-[#161A18] leading-snug line-clamp-2">
+            <h3 className="text-sm sm:text-base font-semibold text-[#0F172A] leading-snug line-clamp-2">
               {title}
             </h3>
 
             {/* قسم السعر */}
             <div className="flex items-baseline gap-2 pt-1 flex-wrap">
-              <span className="text-base sm:text-lg font-semibold text-[#1A4736] leading-none">
-                {price} <span className="text-xs font-normal text-[#4B534E]">{currency}</span>
+              <span className="text-base sm:text-lg font-bold text-[#1257D6] leading-none">
+                {price} <span className="text-xs font-normal text-[#64748B]">{currency}</span>
               </span>
 
               {hasDiscount && (
-                <span className="text-xs text-[#4B534E]/70 line-through leading-none">
+                <span className="text-xs text-[#94A3B8] line-through leading-none">
                   {originalPrice} {currency}
                 </span>
               )}
