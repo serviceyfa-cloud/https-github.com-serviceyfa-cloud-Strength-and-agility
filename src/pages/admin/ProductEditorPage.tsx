@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
-import { Badge } from '../../components/common/Badge';
-import { Image as ImageIcon, CheckCircle } from 'lucide-react';
-import type {
-  ProductStatus,
-  ProductImage,
-  Category,
-} from '../../types';
+import { ArrowLeft, Save, CheckCircle, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import type { Product, ProductStatus, Category } from '../../types';
 
 interface FormState {
   name: string;
@@ -22,7 +17,7 @@ interface FormState {
   status: ProductStatus;
   featured: boolean;
   sortOrder: number;
-  images: ProductImage[];
+  images: { mediaId: string; url: string; alt?: string }[];
 }
 
 interface FormErrors {
@@ -35,15 +30,14 @@ interface FormErrors {
   categoryId?: string;
 }
 
-const STATUS_OPTIONS: { value: ProductStatus; label: string; badgeVariant: 'default' | 'success' | 'destructive' }[] = [
-  { value: 'draft', label: 'مسودة', badgeVariant: 'default' },
-  { value: 'active', label: 'نشط', badgeVariant: 'success' },
-  { value: 'inactive', label: 'غير نشط', badgeVariant: 'default' },
-  { value: 'out_of_stock', label: 'نفد المخزون', badgeVariant: 'destructive' },
+const STATUS_OPTIONS: { value: ProductStatus; label: string }[] = [
+  { value: 'draft', label: 'مسودة (Draft)' },
+  { value: 'active', label: 'نشط (Active)' },
+  { value: 'inactive', label: 'غير نشط (Inactive)' },
+  { value: 'out_of_stock', label: 'نفد المخزون (Out of Stock)' },
 ];
 
 export const ProductEditorPage: React.FC = () => {
-  // الحالة المحلية للنموذج
   const [formData, setFormData] = useState<FormState>({
     name: '',
     slug: '',
@@ -59,23 +53,16 @@ export const ProductEditorPage: React.FC = () => {
     images: [],
   });
 
-  // مصفوفة التصنيفات الفعلية (فارغة في الحالة الحالية دون أي بيانات وهمية)
   const [categories] = useState<Category[]>([]);
-
-  // حالة الأخطاء المحلية
   const [errors, setErrors] = useState<FormErrors>({});
-
-  // رسالة النجاح المحلية المؤقتة
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // معالجة تغيير الحقول النصية
   const handleChange = (field: keyof FormState, value: unknown) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
 
-    // مسح الخطأ الخاص بالحقل عند التعديل
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
@@ -88,21 +75,17 @@ export const ProductEditorPage: React.FC = () => {
     }
   };
 
-  // التحقق من صحة النموذج
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // 1. الاسم مطلوب
     if (!formData.name.trim()) {
       newErrors.name = 'يرجى إدخال اسم المنتج';
     }
 
-    // 2. slug مطلوب
     if (!formData.slug.trim()) {
       newErrors.slug = 'يرجى إدخال الرابط المختصر';
     }
 
-    // 3. السعر مطلوب ورقم صالح وغير سالب
     if (formData.price.trim() === '') {
       newErrors.price = 'يرجى إدخال سعر المنتج';
     } else {
@@ -112,7 +95,6 @@ export const ProductEditorPage: React.FC = () => {
       }
     }
 
-    // 4. السعر السابق اختياري وإذا أُدخل يجب أن يكون صالحًا وغير سالب
     if (formData.compareAtPrice.trim() !== '') {
       const parsedCompare = Number(formData.compareAtPrice);
       if (isNaN(parsedCompare) || parsedCompare < 0) {
@@ -120,108 +102,96 @@ export const ProductEditorPage: React.FC = () => {
       }
     }
 
-    // 5. SKU مطلوب
     if (!formData.sku.trim()) {
       newErrors.sku = 'يرجى إدخال رمز SKU';
     }
 
-    // 6. المخزون رقم صحيح وغير سالب
     if (formData.stock.trim() === '') {
       newErrors.stock = 'يرجى تحديد كمية المخزون';
     } else {
       const parsedStock = Number(formData.stock);
       if (isNaN(parsedStock) || !Number.isInteger(parsedStock) || parsedStock < 0) {
-        newErrors.stock = 'يرجى إدخال كمية مخزون صحيحة وغير سالبة';
+        newErrors.stock = 'يرجى إدخال رقم صحيح غير سالب للمخزون';
       }
-    }
-
-    // 7. التصنيف: مطلوب فقط إذا كانت هناك تصنيفات متاحة فعلياً
-    if (categories.length > 0 && !formData.categoryId) {
-      newErrors.categoryId = 'يرجى اختيار تصنيف للمنتج';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // معالجة الضغط على حفظ المنتج
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const isValid = validateForm();
-    if (isValid) {
-      setSuccessMessage('تم التحقق من بيانات المنتج بنجاح');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      setSuccessMessage(null);
+    if (!validateForm()) {
+      return;
     }
-  };
 
-  // معالجة الضغط على إلغاء (إعادة تعيين النموذج كواجهة فقط)
-  const handleCancel = () => {
-    setErrors({});
-    setSuccessMessage(null);
+    setSuccessMessage(
+      'تم التحقق من صحة حقول المنتج بنجاح (واجهة مستخدم فقط - يلزم ربط خادم Backend لحفظ السجل في قاعدة البيانات).'
+    );
   };
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-6 text-start" dir="rtl">
       {/* ترويسة الصفحة */}
-      <header className="pb-5 border-b border-[#E5DFD3] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <header className="pb-5 border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#171816] tracking-tight">
-            إضافة منتج
-          </h1>
-          <p className="text-xs sm:text-sm text-[#5D5F58] mt-1">
-            إدخال وتخصيص بيانات المنتج الجديد وتحديد الأسعار وتفاصيل المخزون.
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
+              إضافة منتج جديد
+            </h1>
+            <span className="text-xs px-2.5 py-0.5 rounded-md font-bold bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE]">
+              نموذج إدخال محلي
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-[#64748B]">
+            أدخل تفاصيل ومواصفات المنتج الجديد لتهيئته للإضافة إلى قاعدة البيانات.
           </p>
         </div>
 
-        {/* أزرار الإجراءات */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Button
-            type="button"
-            variant="secondary"
-            size="md"
-            onClick={handleCancel}
+        <div className="flex items-center gap-2.5">
+          <a
+            href="/admin/products"
+            className="min-h-[48px] px-4 py-2 text-xs font-semibold text-[#0F172A] bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition-colors inline-flex items-center gap-1.5"
           >
-            إلغاء
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="md"
+            <ArrowLeft className="w-4 h-4 text-[#64748B]" aria-hidden="true" />
+            <span>العودة للمنتجات</span>
+          </a>
+
+          <button
+            type="submit"
             onClick={handleSave}
+            className="min-h-[48px] px-5 py-2.5 bg-[#1257D6] hover:bg-[#0E46AF] active:bg-[#0C3B94] text-[#FFFFFF] font-bold text-xs sm:text-sm rounded-xl transition-colors inline-flex items-center gap-2 select-none"
           >
-            حفظ المنتج
-          </Button>
+            <Save className="w-4 h-4" aria-hidden="true" />
+            <span>حفظ المنتج (محلياً)</span>
+          </button>
         </div>
       </header>
 
-      {/* رسالة النجاح المحلية المؤقتة عند اكتمال التحقق بنجاح */}
+      {/* رسالة النجاح المحلية */}
       {successMessage && (
         <div
           role="status"
-          className="p-4 rounded-[2px] border border-[#2E5E4E] bg-[#EBF3EF] text-[#1E3E34] flex items-center gap-3 text-xs sm:text-sm"
+          className="p-4 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] text-[#1E40AF] flex items-center gap-3 text-xs sm:text-sm"
         >
-          <CheckCircle className="w-5 h-5 text-[#2E5E4E] shrink-0" aria-hidden="true" />
-          <span className="font-medium">{successMessage}</span>
+          <CheckCircle className="w-5 h-5 text-[#1257D6] shrink-0" aria-hidden="true" />
+          <span className="font-semibold">{successMessage}</span>
         </div>
       )}
 
       {/* نموذج إدخال بيانات المنتج */}
       <form onSubmit={handleSave} noValidate>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* العمود الرئيسي: المعلومات الأساسية، التسعير، والمخزون، والصور */}
+          {/* العمود الرئيسي */}
           <div className="lg:col-span-2 space-y-6">
-            {/* بطاقة معلومات المنتج */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
+            {/* معلومات المنتج */}
+            <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+              <CardHeader className="border-b border-[#E2E8F0] pb-3.5">
+                <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
                   معلومات المنتج
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-4">
-                {/* اسم المنتج */}
                 <Input
                   id="product-name"
                   label="اسم المنتج"
@@ -232,7 +202,6 @@ export const ProductEditorPage: React.FC = () => {
                   error={errors.name}
                 />
 
-                {/* الرابط المختصر (Slug) */}
                 <Input
                   id="product-slug"
                   label="الرابط المختصر (Slug)"
@@ -246,11 +215,10 @@ export const ProductEditorPage: React.FC = () => {
                   helpText="يُستخدم في عنوان الرابط المباشر للمنتج في المتجر"
                 />
 
-                {/* وصف المنتج */}
                 <div className="flex flex-col gap-1.5 text-start">
                   <label
                     htmlFor="product-description"
-                    className="text-xs sm:text-sm font-medium text-[#171816]"
+                    className="text-xs sm:text-sm font-semibold text-[#0F172A]"
                   >
                     الوصف
                   </label>
@@ -260,22 +228,21 @@ export const ProductEditorPage: React.FC = () => {
                     value={formData.description}
                     onChange={(e) => handleChange('description', e.target.value)}
                     placeholder="وصف تفصيلي لمكونات المنتج وفوائده وطريقة الاستخدام..."
-                    className="w-full p-3 rounded-[2px] text-xs sm:text-sm text-[#171816] bg-[#FAF7F2] border border-[#DCD5C6] hover:border-[#C5BEB1] focus:border-[#9E7D3B] focus:ring-1 focus:ring-[#9E7D3B] focus:outline-none transition-colors duration-150 resize-y"
+                    className="w-full p-3 rounded-xl text-xs sm:text-sm text-[#0F172A] bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#1257D6] focus:ring-1 focus:ring-[#1257D6] focus:outline-none transition-colors duration-150 resize-y placeholder:text-[#94A3B8]"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* بطاقة التسعير */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
-                  التسعير
+            {/* التسعير والمخزون */}
+            <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+              <CardHeader className="border-b border-[#E2E8F0] pb-3.5">
+                <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
+                  التسعير والمخزون
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-4 sm:p-6">
+              <CardContent className="p-4 sm:p-6 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* السعر الحالي */}
                   <Input
                     id="product-price"
                     label="السعر"
@@ -286,13 +253,12 @@ export const ProductEditorPage: React.FC = () => {
                     dir="ltr"
                     className="font-mono text-start"
                     placeholder="0.00"
-                    endElement={<span className="text-xs text-[#5D5F58]">ر.س</span>}
+                    endElement={<span className="text-xs text-[#64748B]">ر.س</span>}
                     value={formData.price}
                     onChange={(e) => handleChange('price', e.target.value)}
                     error={errors.price}
                   />
 
-                  {/* السعر السابق */}
                   <Input
                     id="product-compare-price"
                     label="السعر السابق (اختياري)"
@@ -302,26 +268,15 @@ export const ProductEditorPage: React.FC = () => {
                     dir="ltr"
                     className="font-mono text-start"
                     placeholder="0.00"
-                    endElement={<span className="text-xs text-[#5D5F58]">ر.س</span>}
+                    endElement={<span className="text-xs text-[#64748B]">ر.س</span>}
                     value={formData.compareAtPrice}
                     onChange={(e) => handleChange('compareAtPrice', e.target.value)}
                     error={errors.compareAtPrice}
-                    helpText="يظهر مشطوباً إلى جانب السعر الحالي عند تقديم تخفيض"
+                    helpText="يظهر مشطوباً إلى جانب السعر الحالي"
                   />
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* بطاقة المخزون */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
-                  المخزون
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* رمز SKU */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <Input
                     id="product-sku"
                     label="رمز المنتج (SKU)"
@@ -334,7 +289,6 @@ export const ProductEditorPage: React.FC = () => {
                     error={errors.sku}
                   />
 
-                  {/* الكمية المتاحة */}
                   <Input
                     id="product-stock"
                     label="الكمية المتاحة"
@@ -352,61 +306,42 @@ export const ProductEditorPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* بطاقة صور المنتج */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
+            {/* صور المنتج */}
+            <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+              <CardHeader className="border-b border-[#E2E8F0] pb-3.5">
+                <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
                   صور المنتج
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
-                {formData.images.length === 0 ? (
-                  <div className="py-8 px-4 text-center rounded-[2px] border border-dashed border-[#DCD5C6] bg-[#FAF7F2]">
-                    <div className="w-10 h-10 rounded-[2px] border border-[#E5DFD3] bg-[#F4EFE5] flex items-center justify-center mx-auto mb-2.5 text-[#7D6126]">
-                      <ImageIcon className="w-5 h-5" aria-hidden="true" />
-                    </div>
-                    <p className="text-xs sm:text-sm font-semibold text-[#171816] mb-1">
-                      لا توجد صور مضافة لهذا المنتج حالياً
-                    </p>
-                    <p className="text-xs text-[#5D5F58] max-w-sm mx-auto leading-relaxed">
-                      ستتاح إدارة الصور واختيارها من مكتبة الوسائط المركزية لاحقاً.
-                    </p>
+                <div className="py-8 px-4 text-center rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8FAFC]">
+                  <div className="w-10 h-10 rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] flex items-center justify-center mx-auto mb-2.5 text-[#1257D6]">
+                    <ImageIcon className="w-5 h-5" aria-hidden="true" />
                   </div>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {formData.images.map((img, idx) => (
-                      <div
-                        key={img.mediaId || idx}
-                        className="aspect-square rounded-[2px] border border-[#E5DFD3] overflow-hidden bg-[#FAF7F2]"
-                      >
-                        <img
-                          src={img.url}
-                          alt={img.alt || formData.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
+                  <p className="text-xs sm:text-sm font-bold text-[#0F172A] mb-1">
+                    لا توجد صور مضافة لهذا المنتج حالياً
+                  </p>
+                  <p className="text-xs text-[#64748B] max-w-sm mx-auto leading-relaxed">
+                    ستتاح إدارة الصور واختيارها من مكتبة الوسائط المركزية لاحقاً.
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* العمود الجانبي: التصنيف، الحالة، وإعدادات العرض */}
+          {/* العمود الجانبي */}
           <div className="space-y-6">
-            {/* بطاقة الحالة والتصنيف */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
+            <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+              <CardHeader className="border-b border-[#E2E8F0] pb-3.5">
+                <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
                   الحالة والتصنيف
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-4">
-                {/* حالة المنتج */}
                 <div className="flex flex-col gap-1.5 text-start">
                   <label
                     htmlFor="product-status"
-                    className="text-xs sm:text-sm font-medium text-[#171816]"
+                    className="text-xs sm:text-sm font-semibold text-[#0F172A]"
                   >
                     حالة المنتج
                   </label>
@@ -414,7 +349,7 @@ export const ProductEditorPage: React.FC = () => {
                     id="product-status"
                     value={formData.status}
                     onChange={(e) => handleChange('status', e.target.value as ProductStatus)}
-                    className="w-full min-h-[44px] px-3.5 py-2.5 rounded-[2px] text-xs sm:text-sm text-[#171816] bg-[#FAF7F2] border border-[#DCD5C6] hover:border-[#C5BEB1] focus:border-[#9E7D3B] focus:ring-1 focus:ring-[#9E7D3B] focus:outline-none transition-colors duration-150"
+                    className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm text-[#0F172A] bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#1257D6] focus:ring-1 focus:ring-[#1257D6] focus:outline-none transition-colors duration-150"
                   >
                     {STATUS_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -424,16 +359,15 @@ export const ProductEditorPage: React.FC = () => {
                   </select>
                 </div>
 
-                {/* تصنيف المنتج */}
                 <div className="flex flex-col gap-1.5 text-start">
                   <label
                     htmlFor="product-category"
-                    className="text-xs sm:text-sm font-medium text-[#171816]"
+                    className="text-xs sm:text-sm font-semibold text-[#0F172A]"
                   >
                     التصنيف
                   </label>
                   {categories.length === 0 ? (
-                    <div className="p-3 rounded-[2px] border border-[#E5DFD3] bg-[#FAF7F2] text-xs text-[#5D5F58]">
+                    <div className="p-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-xs text-[#64748B]">
                       لا توجد تصنيفات متاحة حالياً
                     </div>
                   ) : (
@@ -441,7 +375,7 @@ export const ProductEditorPage: React.FC = () => {
                       id="product-category"
                       value={formData.categoryId}
                       onChange={(e) => handleChange('categoryId', e.target.value)}
-                      className="w-full min-h-[44px] px-3.5 py-2.5 rounded-[2px] text-xs sm:text-sm text-[#171816] bg-[#FAF7F2] border border-[#DCD5C6] hover:border-[#C5BEB1] focus:border-[#9E7D3B] focus:ring-1 focus:ring-[#9E7D3B] focus:outline-none transition-colors duration-150"
+                      className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm text-[#0F172A] bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#1257D6] focus:ring-1 focus:ring-[#1257D6] focus:outline-none transition-colors duration-150"
                     >
                       <option value="">اختر تصنيفاً للمنتج...</option>
                       {categories.map((cat) => (
@@ -451,34 +385,18 @@ export const ProductEditorPage: React.FC = () => {
                       ))}
                     </select>
                   )}
-                  {errors.categoryId && (
-                    <p role="alert" className="text-[11px] sm:text-xs text-[#8A2E2B] font-medium leading-tight">
-                      {errors.categoryId}
-                    </p>
-                  )}
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* بطاقة إعدادات العرض */}
-            <Card className="bg-[#F6F2E9] border-[#E5DFD3]">
-              <CardHeader className="border-b border-[#E5DFD3] pb-3.5">
-                <CardTitle as="h2" className="text-base font-semibold text-[#171816]">
-                  إعدادات العرض
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 space-y-4">
-                {/* منتج مميز */}
-                <div className="flex items-center justify-between p-3 rounded-[2px] border border-[#E5DFD3] bg-[#FAF7F2]">
+                <div className="flex items-center justify-between p-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] mt-4">
                   <div className="space-y-0.5">
                     <label
                       htmlFor="product-featured"
-                      className="text-xs sm:text-sm font-medium text-[#171816] cursor-pointer"
+                      className="text-xs sm:text-sm font-semibold text-[#0F172A] cursor-pointer"
                     >
                       منتج مميز
                     </label>
-                    <p className="text-[11px] text-[#5D5F58]">
-                      إبراز المنتج في قسم المنتجات المميزة بالصفحة الرئيسية
+                    <p className="text-[11px] text-[#64748B]">
+                      إبراز المنتج في قسم المنتجات المميزة
                     </p>
                   </div>
                   <input
@@ -486,22 +404,9 @@ export const ProductEditorPage: React.FC = () => {
                     type="checkbox"
                     checked={formData.featured}
                     onChange={(e) => handleChange('featured', e.target.checked)}
-                    className="w-5 h-5 accent-[#2E5E4E] rounded-[2px] border-[#DCD5C6] cursor-pointer"
+                    className="w-5 h-5 accent-[#1257D6] rounded cursor-pointer"
                   />
                 </div>
-
-                {/* ترتيب العرض */}
-                <Input
-                  id="product-sort-order"
-                  label="ترتيب العرض"
-                  type="number"
-                  step="1"
-                  dir="ltr"
-                  className="font-mono text-start"
-                  value={formData.sortOrder}
-                  onChange={(e) => handleChange('sortOrder', Number(e.target.value) || 0)}
-                  helpText="الرقم الأقل يظهر أولاً في قوائم العرض"
-                />
               </CardContent>
             </Card>
           </div>

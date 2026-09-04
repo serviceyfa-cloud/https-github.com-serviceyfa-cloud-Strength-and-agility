@@ -10,7 +10,6 @@ import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
 
 // صفحات لوحة الإدارة
-import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
 import { ProductEditorPage } from './pages/admin/ProductEditorPage';
@@ -101,28 +100,6 @@ export default function App() {
     typeof window !== 'undefined' ? normalizePath(window.location.pathname) : '/'
   );
 
-  // إدارة حالة مصادقة المسؤول (Admin Guard State)
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('admin_authenticated') === 'true';
-    }
-    return false;
-  });
-
-  const handleAdminLogin = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('admin_authenticated', 'true');
-    }
-    setIsAdminAuthenticated(true);
-  }, []);
-
-  const handleAdminLogout = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('admin_authenticated');
-    }
-    setIsAdminAuthenticated(false);
-  }, []);
-
   const navigate = useCallback((to: string) => {
     const [pathPart, hashPart] = to.split('#');
     const normalized = normalizePath(pathPart);
@@ -145,7 +122,7 @@ export default function App() {
     }
   }, []);
 
-  // الاستماع لأحداث الرجوع والتقدم في المتصفح
+  // الاستماع لأحداث التنقل في المتصفح
   useEffect(() => {
     const handlePopState = () => {
       setCurrentPath(normalizePath(window.location.pathname));
@@ -162,7 +139,7 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // معالجة النقر على الروابط الداخلية لدعم تجربة SPA سلسة
+  // معالجة النقر على الروابط الداخلية لدعم تجربة SPA متسقة
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       if (e.button !== 0 || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
@@ -187,22 +164,12 @@ export default function App() {
 
   // تحديد الصفحة المعروضة بناءً على المسار
   const renderContent = () => {
-    // 1. حماية مسارات الإدارة بواسطة Admin Guard
+    // 1. مسارات الإدارة (تستخدم AdminLayout المستقل وتوضح حالة الـ UI دون مصادقة وهمية)
     if (isAdminRoute) {
-      if (!isAdminAuthenticated) {
-        return (
-          <AdminLoginPage
-            onAuthenticate={handleAdminLogin}
-            onNavigateHome={() => navigate('/')}
-          />
-        );
-      }
-
-      // مسارات الإدارة بعد تجاوز حارس التحقق
       switch (currentPath) {
         case '/admin':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <AdminDashboardPage
                 onNavigate={navigate}
                 onNavigateToStore={() => navigate('/shop')}
@@ -212,56 +179,56 @@ export default function App() {
 
         case '/admin/products':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <ProductsPage />
             </AdminLayout>
           );
 
         case '/admin/products/new':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <ProductEditorPage />
             </AdminLayout>
           );
 
         case '/admin/categories':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <CategoriesPage />
             </AdminLayout>
           );
 
         case '/admin/media':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <MediaPage />
             </AdminLayout>
           );
 
         case '/admin/orders':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <OrdersPage />
             </AdminLayout>
           );
 
         case '/admin/invoices':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <InvoicesPage />
             </AdminLayout>
           );
 
         case '/admin/settings':
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <StoreSettingsPage />
             </AdminLayout>
           );
 
         default:
           return (
-            <AdminLayout currentPath={currentPath} navigate={navigate} onLogout={handleAdminLogout}>
+            <AdminLayout currentPath={currentPath} navigate={navigate}>
               <NotFoundPage onNavigateHome={() => navigate('/admin')} />
             </AdminLayout>
           );
