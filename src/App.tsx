@@ -48,7 +48,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigateToShop }) => {
       <Container>
         <div className="max-w-md mx-auto text-center">
           <div className="bg-[#FFFFFF] border border-[#E5E1DA] rounded-2xl p-8 sm:p-12">
-            <div className="w-16 h-16 rounded-2xl bg-[#141414] border border-[#262626] text-[#D89B12] flex items-center justify-center mx-auto mb-5">
+            <div className="w-16 h-16 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1257D6] flex items-center justify-center mx-auto mb-5">
               <ShoppingBag className="w-8 h-8" aria-hidden="true" />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-[#161A18] mb-2 tracking-tight">

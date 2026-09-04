@@ -16,7 +16,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   success: 'bg-[#EBF3EF] text-[#1A4736] border-[#D6E4DC]',
   warning: 'bg-[#FDF9EE] text-[#83631A] border-[#EEDFB8]',
   destructive: 'bg-[#FDF3F2] text-[#B93834] border-[#F3D1D0]',
-  gold: 'bg-[#FBF7EE] text-[#83631A] border-[#E8DDBF]',
+  gold: 'bg-[#EFF6FF] text-[#1257D6] border-[#BFDBFE]',
 };
 
 const sizeStyles: Record<BadgeSize, string> = {

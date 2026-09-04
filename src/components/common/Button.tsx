@@ -15,11 +15,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#1A4736] text-[#FAF8F5] border border-[#1A4736] hover:bg-[#14372A] active:bg-[#0F2C21]',
+    'bg-[#1257D6] text-[#FFFFFF] border border-[#1257D6] hover:bg-[#1B64EB] active:bg-[#0E46AF]',
   secondary:
-    'bg-[#EBF3EF] text-[#1A4736] border border-[#E5E1DA] hover:bg-[#DFEBE4] active:bg-[#D3E2D8]',
+    'bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE] hover:bg-[#DBEAFE] active:bg-[#BFDBFE]',
   ghost:
-    'bg-transparent text-[#161A18] border border-transparent hover:bg-[#EBF3EF] hover:text-[#1A4736] active:bg-[#DFEBE4]',
+    'bg-transparent text-[#0F172A] border border-transparent hover:bg-[#EFF6FF] hover:text-[#1257D6] active:bg-[#DBEAFE]',
   destructive:
     'bg-[#B93834] text-[#FAF8F5] border border-[#A52F2B] hover:bg-[#A52F2B] active:bg-[#8F2825]',
 };
@@ -57,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           'relative inline-flex items-center justify-center font-medium select-none rounded-xl whitespace-nowrap',
           'transition-all duration-150 ease-in-out active:scale-[0.99]',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF8F5]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF8F5]',
           'disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:active:scale-100',
           variantStyles[variant],
           sizeStyles[size],

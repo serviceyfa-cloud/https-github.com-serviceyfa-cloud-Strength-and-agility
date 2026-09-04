@@ -103,10 +103,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, currentPath = 
 
       {/* ========================================================================= */}
       {/* شريط التنقل السفلي المخصص للعميل على الجوال (Customer Bottom Navigation) */}
-      {/* أهداف لمسية قياسية لا تقل عن 48px وتصميم فخم بالهوية الداكنة والذهبية   */}
+      {/* أهداف لمسية قياسية لا تقل عن 48px وتصميم فخم باللون الأزرق والخلفية الفاتحة */}
       {/* ========================================================================= */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-[#050505] border-t border-[#1E1E1E] pb-safe select-none shadow-lg"
+        className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-[#FFFFFF] border-t border-[#E2E8F0] pb-safe select-none shadow-sm"
         aria-label="شريط تنقل متجر الرشاقة والقوة"
       >
         <div className="flex items-center justify-around h-16 px-1">
@@ -119,8 +119,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, currentPath = 
                 href={item.href}
                 onClick={(e) => handleLinkClick(e, item.href)}
                 className={cn(
-                  'flex-1 min-h-[48px] min-w-[48px] flex flex-col items-center justify-center gap-1 py-1 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89B12]',
-                  active ? 'text-[#D89B12]' : 'text-[#777777] hover:text-[#FFFFFF]'
+                  'flex-1 min-h-[48px] min-w-[48px] flex flex-col items-center justify-center gap-1 py-1 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]',
+                  active ? 'text-[#1257D6]' : 'text-[#64748B] hover:text-[#0F172A]'
                 )}
                 aria-current={active ? 'page' : undefined}
                 aria-label={item.label}
@@ -128,7 +128,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, currentPath = 
                 <div
                   className={cn(
                     'w-9 h-7 rounded-md flex items-center justify-center transition-colors',
-                    active ? 'bg-[#141414] text-[#D89B12]' : 'bg-transparent text-[#777777]'
+                    active ? 'bg-[#EFF6FF] text-[#1257D6]' : 'bg-transparent text-[#64748B]'
                   )}
                 >
                   <Icon
@@ -140,7 +140,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, currentPath = 
                 <span
                   className={cn(
                     'text-[10px] sm:text-[11px] leading-none whitespace-nowrap',
-                    active ? 'font-bold text-[#D89B12]' : 'font-normal text-[#777777]'
+                    active ? 'font-bold text-[#1257D6]' : 'font-normal text-[#64748B]'
                   )}
                 >
                   {item.label}

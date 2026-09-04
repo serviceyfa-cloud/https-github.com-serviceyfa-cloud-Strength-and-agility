@@ -125,7 +125,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
           <div className="flex flex-col gap-1.5">
             {subtitle && (
-              <span className="text-[11px] font-medium text-[#9A7B38] tracking-wide">
+              <span className="text-[11px] font-medium text-[#1257D6] tracking-wide">
                 {subtitle}
               </span>
             )}

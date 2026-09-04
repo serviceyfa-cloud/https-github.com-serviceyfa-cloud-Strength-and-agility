@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#050505] border-b border-[#1E1E1E] pt-safe select-none">
+    <header className="sticky top-0 z-40 w-full bg-[#FFFFFF] border-b border-[#E2E8F0] pt-safe select-none">
       <Container>
         <div className="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-6">
           {/* ========================================================================= */}
@@ -88,11 +88,11 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
           <a
             href="/"
             onClick={(e) => handleLinkClick(e, '/')}
-            className="flex items-center gap-2 min-h-[48px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89B12] group shrink-0"
+            className="flex items-center gap-2 min-h-[48px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] group shrink-0"
             aria-label={`${STORE_CONFIG.name} - الصفحة الرئيسية`}
           >
-            <span className="font-extrabold text-lg sm:text-xl lg:text-2xl tracking-tight text-[#FFFFFF] leading-none select-none">
-              الرشاقة <span className="text-[#D89B12]">والقوة</span>
+            <span className="font-extrabold text-lg sm:text-xl lg:text-2xl tracking-tight text-[#0F172A] leading-none select-none">
+              الرشاقة <span className="text-[#1257D6]">والقوة</span>
             </span>
           </a>
 
@@ -111,10 +111,10 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
                   href={link.href}
                   onClick={(e) => handleLinkClick(e, link.href)}
                   className={cn(
-                    'min-h-[48px] px-3 lg:px-4 py-2 rounded-lg text-sm transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89B12]',
+                    'min-h-[48px] px-3 lg:px-4 py-2 rounded-lg text-sm transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]',
                     active
-                      ? 'text-[#D89B12] font-bold bg-[#141414] border border-[#262626]'
-                      : 'text-[#E0E0E0] font-medium hover:text-[#FFFFFF] hover:bg-[#141414]'
+                      ? 'text-[#1257D6] font-bold bg-[#EFF6FF] border border-[#BFDBFE]'
+                      : 'text-[#475569] font-medium hover:text-[#0F172A] hover:bg-[#F1F5F9]'
                   )}
                   aria-current={active ? 'page' : undefined}
                 >
@@ -134,11 +134,11 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
                 type="search"
                 placeholder="ابحث عن منتج أو تصنيف..."
                 aria-label="البحث في المتجر"
-                className="w-full h-12 bg-[#141414] text-xs lg:text-sm text-[#FFFFFF] placeholder-[#777777] rounded-lg ps-10 pe-3.5 border border-[#262626] focus:outline-none focus:ring-2 focus:ring-[#D89B12] focus:border-[#D89B12] transition-colors"
+                className="w-full h-12 bg-[#F8FAFC] text-xs lg:text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-lg ps-10 pe-3.5 border border-[#E2E8F0] focus:outline-none focus:ring-2 focus:ring-[#1257D6] focus:border-[#1257D6] transition-colors"
                 readOnly
               />
               <Search
-                className="w-4 h-4 text-[#777777] absolute start-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-[#64748B] absolute start-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
             </div>
@@ -147,7 +147,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
             <button
               type="button"
               aria-label="البحث في المنتجات"
-              className="md:hidden min-h-[48px] min-w-[48px] p-2 text-[#E0E0E0] hover:text-[#FFFFFF] hover:bg-[#141414] active:bg-[#1C1C1C] rounded-lg border border-transparent hover:border-[#262626] transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89B12]"
+              className="md:hidden min-h-[48px] min-w-[48px] p-2 text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] active:bg-[#E2E8F0] rounded-lg border border-transparent hover:border-[#E2E8F0] transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]"
             >
               <Search className="w-5 h-5" aria-hidden="true" />
             </button>
@@ -157,9 +157,9 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
               href="/cart"
               onClick={(e) => handleLinkClick(e, '/cart')}
               aria-label="سلة المشتريات"
-              className="min-h-[48px] min-w-[48px] px-3 py-2 text-[#FFFFFF] bg-[#141414] hover:bg-[#1C1C1C] active:bg-[#222222] border border-[#262626] rounded-lg transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89B12]"
+              className="min-h-[48px] min-w-[48px] px-3.5 py-2 text-[#0F172A] bg-[#FFFFFF] hover:bg-[#F8FAFC] active:bg-[#F1F5F9] border border-[#E2E8F0] rounded-lg transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]"
             >
-              <ShoppingBag className="w-5 h-5 text-[#D89B12] shrink-0" aria-hidden="true" />
+              <ShoppingBag className="w-5 h-5 text-[#1257D6] shrink-0" aria-hidden="true" />
               <span className="text-xs lg:text-sm font-semibold hidden sm:inline select-none">
                 السلة
               </span>
