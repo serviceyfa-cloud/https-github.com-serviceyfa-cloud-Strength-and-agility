@@ -12,11 +12,11 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-[#F2EFE9] text-[#161A18] border-[#E5E1DA]',
+  default: 'bg-[#FAF8F5] text-[#161A18] border-[#E5E1DA]',
   success: 'bg-[#EBF3EF] text-[#1A4736] border-[#D6E4DC]',
-  warning: 'bg-[#FBF6EA] text-[#825F18] border-[#EEDFB8]',
-  destructive: 'bg-[#FDF2F1] text-[#A62F2B] border-[#F4CECC]',
-  gold: 'bg-[#F8F4EA] text-[#7A6124] border-[#E6D8B6]',
+  warning: 'bg-[#FDF9EE] text-[#83631A] border-[#EEDFB8]',
+  destructive: 'bg-[#FDF3F2] text-[#B93834] border-[#F3D1D0]',
+  gold: 'bg-[#FBF7EE] text-[#83631A] border-[#E8DDBF]',
 };
 
 const sizeStyles: Record<BadgeSize, string> = {

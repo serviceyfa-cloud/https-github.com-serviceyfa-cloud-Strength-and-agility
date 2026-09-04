@@ -1,86 +1,67 @@
-import React, { useState } from 'react';
-import { CircleDot, Menu, X, ShoppingBag, Search } from 'lucide-react';
-import { STORE_CONFIG, INITIAL_NAV_ITEMS } from '../../constants/config';
+import React from 'react';
+import { Activity, ShoppingBag, Search } from 'lucide-react';
+import { STORE_CONFIG } from '../../constants/config';
 import { Container } from '../common/Container';
 
-export const Header: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+export interface HeaderProps {
+  currentPath?: string;
+  navigate?: (to: string) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate }) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (navigate) {
+      navigate(href);
+    } else if (window.location.pathname !== href) {
+      window.history.pushState({}, '', href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#FAF7F2] border-b border-[#E8E2D5]">
+    <header className="sticky top-0 z-40 w-full bg-[#FFFFFF] border-b border-[#E5E1DA] pt-safe select-none">
       <Container>
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-3">
-          {/* الشعار واسم المتجر */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[3px] bg-[#1F3327] text-[#FAF7F2] flex items-center justify-center shrink-0 border border-[#16251C]">
-              <CircleDot className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#C5A059]" strokeWidth={2.2} />
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-3">
+          {/* الشعار واسم التطبيق - Top App Bar Brand */}
+          <a
+            href="/shop"
+            onClick={(e) => handleLinkClick(e, '/shop')}
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer min-h-[48px] rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF]"
+            aria-label={`${STORE_CONFIG.name} - الصفحة الرئيسية`}
+          >
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#1A4736] text-[#FAF8F5] flex items-center justify-center shrink-0">
+              <Activity className="w-5 h-5 text-[#FAF8F5]" strokeWidth={2.2} aria-hidden="true" />
             </div>
-            <div>
-              <span className="font-bold text-lg sm:text-xl tracking-tight text-[#171816] block leading-tight">
+            <div className="flex flex-col">
+              <span className="font-bold text-base sm:text-lg tracking-tight text-[#161A18] leading-tight">
                 {STORE_CONFIG.name}
               </span>
-              <span className="text-[11px] text-[#666861] hidden sm:block font-normal">
+              <span className="text-[11px] text-[#4B534E] hidden sm:block font-normal leading-none mt-0.5">
                 {STORE_CONFIG.tagline}
               </span>
             </div>
-          </div>
+          </a>
 
-          {/* روابط التصفح للشاشات الكبيرة */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-            {INITIAL_NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                className="px-3.5 py-1.5 text-xs font-medium text-[#4A4C46] hover:text-[#171816] hover:bg-[#F2ECE1] rounded-[2px] transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          {/* أزرار الإجراءات السريعة في الهيدر */}
-          <div className="flex items-center gap-1 sm:gap-1.5">
+          {/* أزرار الإجراءات السريعة - أهداف لمسية لا تقل عن 48px وخالية من النقاط الزخرفية */}
+          <div className="flex items-center gap-1">
             <button
               type="button"
-              aria-label="بحث"
-              className="p-2 text-[#4A4C46] hover:text-[#171816] hover:bg-[#F2ECE1] rounded-[2px] transition-colors"
+              aria-label="البحث في المنتجات"
+              className="min-h-[48px] min-w-[48px] p-2 text-[#4B534E] hover:text-[#161A18] hover:bg-[#EBF3EF] active:bg-[#EBF3EF] rounded-xl transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-5 h-5" aria-hidden="true" />
             </button>
+
             <button
               type="button"
               aria-label="سلة المشتريات"
-              className="relative p-2 text-[#4A4C46] hover:text-[#171816] hover:bg-[#F2ECE1] rounded-[2px] transition-colors"
+              className="min-h-[48px] min-w-[48px] p-2 text-[#4B534E] hover:text-[#161A18] hover:bg-[#EBF3EF] active:bg-[#EBF3EF] rounded-xl transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]"
             >
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-2 start-2 w-1.5 h-1.5 bg-[#9E7D3B] rounded-full"></span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="القائمة"
-              className="p-2 text-[#4A4C46] hover:text-[#171816] hover:bg-[#F2ECE1] rounded-[2px] md:hidden transition-colors"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <ShoppingBag className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
         </div>
-
-        {/* القائمة المتجاوبة للأجهزة المحمولة */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-3 border-t border-[#E8E2D5] space-y-1">
-            {INITIAL_NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-3.5 py-2.5 text-xs font-medium text-[#2E302B] hover:bg-[#F2ECE1] rounded-[2px] transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-        )}
       </Container>
     </header>
   );

@@ -72,9 +72,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={hasError}
             aria-describedby={describedBy}
             className={cn(
-              'w-full min-h-[48px] px-3.5 py-2.5 rounded-lg text-xs sm:text-sm text-[#161A18]',
+              'w-full min-h-[48px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm text-[#161A18]',
               'bg-[#FFFFFF] border transition-colors duration-150 ease-in-out',
-              'placeholder:text-[#7D827E]',
+              'placeholder:text-[#4B534E]/60',
               'focus:outline-none',
               startElement && 'ps-10',
               endElement && 'pe-10',
@@ -88,7 +88,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 'border-[#B93834] focus:border-[#B93834] focus:ring-1 focus:ring-[#B93834]',
               // Disabled State
               disabled &&
-                'bg-[#F5F3EF] text-[#7D827E] border-[#E5E1DA] opacity-60 cursor-not-allowed select-none',
+                'bg-[#FAF8F5] text-[#4B534E]/60 border-[#E5E1DA] opacity-60 cursor-not-allowed select-none',
               className
             )}
             {...props}

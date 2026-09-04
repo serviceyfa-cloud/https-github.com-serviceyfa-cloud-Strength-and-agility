@@ -15,19 +15,19 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#1A4736] text-[#FAF8F5] border border-[#14372A] hover:bg-[#14372A] active:bg-[#0F2C21]',
+    'bg-[#1A4736] text-[#FAF8F5] border border-[#1A4736] hover:bg-[#14372A] active:bg-[#0F2C21]',
   secondary:
-    'bg-[#EBF3EF] text-[#161A18] border border-[#D6E4DC] hover:bg-[#DFEBE4] active:bg-[#D3E2D8]',
+    'bg-[#EBF3EF] text-[#1A4736] border border-[#E5E1DA] hover:bg-[#DFEBE4] active:bg-[#D3E2D8]',
   ghost:
-    'bg-transparent text-[#161A18] border border-transparent hover:bg-[#EBF3EF] active:bg-[#DFEBE4]',
+    'bg-transparent text-[#161A18] border border-transparent hover:bg-[#EBF3EF] hover:text-[#1A4736] active:bg-[#DFEBE4]',
   destructive:
-    'bg-[#B93834] text-[#FAF8F5] border border-[#A22F2B] hover:bg-[#A22F2B] active:bg-[#8D2825]',
+    'bg-[#B93834] text-[#FAF8F5] border border-[#A52F2B] hover:bg-[#A52F2B] active:bg-[#8F2825]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'min-h-[48px] px-4 py-2 text-xs sm:text-sm gap-2',
-  md: 'min-h-[48px] px-5 py-2.5 text-xs sm:text-sm gap-2',
-  lg: 'min-h-[52px] px-6 py-3 text-sm sm:text-base gap-2.5',
+  sm: 'min-h-[48px] px-4 py-2.5 text-xs sm:text-sm gap-2',
+  md: 'min-h-[48px] px-5 py-3 text-xs sm:text-sm gap-2',
+  lg: 'min-h-[52px] px-6 py-3.5 text-sm sm:text-base gap-2.5',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -55,7 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isButtonDisabled}
         aria-busy={isLoading}
         className={cn(
-          'relative inline-flex items-center justify-center font-medium select-none rounded-lg whitespace-nowrap',
+          'relative inline-flex items-center justify-center font-medium select-none rounded-xl whitespace-nowrap',
           'transition-all duration-150 ease-in-out active:scale-[0.99]',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF8F5]',
           'disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:active:scale-100',
