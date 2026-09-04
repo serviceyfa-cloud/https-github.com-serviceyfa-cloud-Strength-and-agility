@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container } from '../components/common/Container';
-import { ArrowLeft } from 'lucide-react';
 
 export interface HomePageProps {
   navigate?: (to: string) => void;
@@ -55,33 +54,34 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
   };
 
   return (
-    <div className="w-full text-start" dir="rtl">
+    <div className="w-full bg-[#FFFFFF] text-start" dir="rtl">
       {/* ========================================================================= */}
-      {/* 1. Hero: واجهة افتتاحية هادئة واحترافية بدون خلفيات سوداء أو ألوان صفراء  */}
+      {/* 1. Hero: واجهة رئيسية ذات حضور قوي وتيبوغرافيا عربية متزنة               */}
       {/* ========================================================================= */}
-      <section className="bg-[#F8FAFC] text-[#0F172A] border-b border-[#E2E8F0] py-16 sm:py-20 lg:py-24">
+      <section className="pt-20 pb-24 sm:pt-28 sm:pb-32 lg:pt-36 lg:pb-36 bg-[#FFFFFF]">
         <Container>
-          <div className="max-w-3xl space-y-5">
-            <span className="inline-block px-3 py-1 rounded-md bg-[#EFF6FF] border border-[#BFDBFE] text-xs font-semibold text-[#1257D6] tracking-wider select-none">
-              شركة الرشاقة والقوة
-            </span>
+          <div className="max-w-4xl space-y-8">
+            <div className="inline-block">
+              <span className="text-sm font-bold text-[#1257D6] tracking-wide select-none">
+                شركة الرشاقة والقوة
+              </span>
+            </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.3] text-[#0F172A]">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-[1.35] sm:leading-[1.3] tracking-tight">
               ريادة متخصصة في التغذية الرياضية ونمط الحياة الصحي
             </h1>
 
-            <p className="text-sm sm:text-base font-normal text-[#475569] leading-relaxed max-w-2xl">
+            <p className="text-base sm:text-lg lg:text-xl font-normal text-[#334155] leading-[1.8] sm:leading-[1.9] max-w-2xl">
               وجهة متخصصة تُعنى بتقديم حلول غذائية ورياضية متكاملة لدعم اللياقة البدنية والنشاط اليومي من خلال خيارات موثوقة ومختارة بعناية.
             </p>
 
-            <div className="pt-3">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={handleNavigateToShop}
-                className="min-h-[48px] px-7 py-3 bg-[#1257D6] hover:bg-[#1B64EB] active:bg-[#0E46AF] text-[#FFFFFF] font-semibold text-sm sm:text-base rounded-xl transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] select-none"
+                className="min-h-[52px] px-8 py-3.5 bg-[#1257D6] hover:bg-[#0E46AF] active:bg-[#0C3B94] text-[#FFFFFF] font-bold text-base rounded-xl transition-colors inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] focus-visible:ring-offset-2 select-none"
               >
-                <span>اكتشف المتجر</span>
-                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                اكتشف المتجر
               </button>
             </div>
           </div>
@@ -89,21 +89,21 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. من نحن: صياغة تحريرية واضحة ومفتوحة دون حاويات مغلقة                  */}
+      {/* 2. من نحن: صياغة تحريرية مريحة بتسلسل طباعي وتوزيع رحب                    */}
       {/* ========================================================================= */}
-      <section className="py-14 sm:py-18 lg:py-20" aria-label="من نحن">
+      <section className="py-20 sm:py-28 bg-[#F8FAFC]" aria-label="من نحن">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
-            <div className="lg:col-span-4">
-              <span className="text-xs font-bold text-[#1257D6] tracking-wider block mb-2">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+            <div className="lg:col-span-5 space-y-4">
+              <span className="text-sm font-bold text-[#1257D6] tracking-wide block">
                 من نحن
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A] tracking-tight leading-snug">
+              <h2 className="text-2xl sm:text-4xl font-bold text-[#0F172A] leading-[1.35] tracking-tight">
                 نعمل على تمكين نمط حياة رياضي وصحي متوازن
               </h2>
             </div>
 
-            <div className="lg:col-span-8 space-y-4 text-sm sm:text-base font-normal text-[#475569] leading-relaxed max-w-2xl">
+            <div className="lg:col-span-7 space-y-5 text-base sm:text-lg font-normal text-[#334155] leading-[1.85]">
               <p>
                 تأسست «الرشاقة والقوة» لتكون وجهة موثوقة للمهتمين بالنشاط البدني والتغذية السليمة، حيث نعمل على توفير خيارات غذائية ومكملات تساهم في تحقيق التوازن الصحي والأداء الرياضي المنشود.
               </p>
@@ -116,29 +116,30 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. مجالاتنا: تقسيم معماري متزن بالأعمدة والمساحات دون أيقونات عشوائية    */}
+      {/* 3. مجالاتنا: هيكل معماري ثلاثي بمحاذاة نقية ومساحات متباعدة                */}
       {/* ========================================================================= */}
-      <section className="py-14 sm:py-18 lg:py-20 border-t border-[#E2E8F0]" aria-label="مجالاتنا">
+      <section className="py-24 sm:py-32 bg-[#FFFFFF]" aria-label="مجالاتنا">
         <Container>
-          <div className="mb-10 sm:mb-12 max-w-2xl">
-            <span className="text-xs font-bold text-[#1257D6] tracking-wider block mb-2">
+          <div className="max-w-3xl mb-14 sm:mb-20 space-y-4">
+            <span className="text-sm font-bold text-[#1257D6] tracking-wide block">
               مجالاتنا
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A] tracking-tight mb-2">
+            <h2 className="text-2xl sm:text-4xl font-bold text-[#0F172A] leading-[1.35] tracking-tight">
               ركائز عملنا واهتمامنا
             </h2>
-            <p className="text-sm font-normal text-[#475569] leading-relaxed">
+            <p className="text-base sm:text-lg font-normal text-[#475569] leading-[1.8]">
               المحاور الأساسية التي نركز عليها لخدمة الرياضيين والمهتمين بالصحة.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
             {COMPANY_DOMAINS.map((domain) => (
-              <div key={domain.id} className="space-y-2.5">
-                <h3 className="text-base sm:text-lg font-bold text-[#0F172A] tracking-tight">
+              <div key={domain.id} className="space-y-4">
+                <div className="w-8 h-1 bg-[#1257D6] rounded-full" />
+                <h3 className="text-lg sm:text-xl font-bold text-[#0F172A] leading-snug">
                   {domain.title}
                 </h3>
-                <p className="text-sm font-normal text-[#475569] leading-relaxed">
+                <p className="text-base font-normal text-[#475569] leading-[1.8]">
                   {domain.description}
                 </p>
               </div>
@@ -148,29 +149,30 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. لماذا الرشاقة والقوة: تسلسل بصري نظيف يستند على الخطوط والمحاذاة      */}
+      {/* 4. لماذا الرشاقة والقوة: ركائز واضحة بترتيب بصري مريح                      */}
       {/* ========================================================================= */}
-      <section className="py-14 sm:py-18 lg:py-20 border-t border-[#E2E8F0]" aria-label="لماذا الرشاقة والقوة">
+      <section className="py-24 sm:py-32 bg-[#F8FAFC]" aria-label="لماذا الرشاقة والقوة">
         <Container>
-          <div className="mb-10 sm:mb-12 max-w-2xl">
-            <span className="text-xs font-bold text-[#1257D6] tracking-wider block mb-2">
+          <div className="max-w-3xl mb-14 sm:mb-20 space-y-4">
+            <span className="text-sm font-bold text-[#1257D6] tracking-wide block">
               قيمنا ومعاييرنا
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A] tracking-tight mb-2">
+            <h2 className="text-2xl sm:text-4xl font-bold text-[#0F172A] leading-[1.35] tracking-tight">
               لماذا الرشاقة والقوة؟
             </h2>
-            <p className="text-sm font-normal text-[#475569] leading-relaxed">
+            <p className="text-base sm:text-lg font-normal text-[#475569] leading-[1.8]">
               مبادئنا الثابتة في تقديم تجربة موثوقة تلائم احتياجاتك.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
             {CORE_PILLARS.map((pillar) => (
-              <div key={pillar.id} className="space-y-2.5">
-                <h3 className="text-base sm:text-lg font-bold text-[#0F172A] tracking-tight">
+              <div key={pillar.id} className="space-y-4">
+                <div className="w-8 h-1 bg-[#1257D6] rounded-full" />
+                <h3 className="text-lg sm:text-xl font-bold text-[#0F172A] leading-snug">
                   {pillar.title}
                 </h3>
-                <p className="text-sm font-normal text-[#475569] leading-relaxed">
+                <p className="text-base font-normal text-[#475569] leading-[1.8]">
                   {pillar.description}
                 </p>
               </div>
@@ -180,25 +182,24 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. CTA نهائي: دعوة واضحة ومباشرة بدون خلفية سوداء                         */}
+      {/* 5. CTA نهائي: دعوة واضحة ومباشرة بأسلوب تجاري راقٍ                        */}
       {/* ========================================================================= */}
-      <section className="bg-[#F8FAFC] text-[#0F172A] border-t border-[#E2E8F0] py-16 sm:py-20 text-center" aria-label="دعوة لزيارة المتجر">
+      <section className="py-24 sm:py-32 bg-[#FFFFFF] text-center" aria-label="دعوة لزيارة المتجر">
         <Container>
-          <div className="max-w-2xl mx-auto space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0F172A]">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <h2 className="text-2xl sm:text-4xl font-bold text-[#0F172A] leading-[1.35] tracking-tight">
               تفضل بزيارة متجرنا التجاري
             </h2>
-            <p className="text-sm sm:text-base font-normal text-[#475569] leading-relaxed">
+            <p className="text-base sm:text-lg font-normal text-[#475569] leading-[1.8]">
               استكشف تشكيلة المكملات الغذائية، الأغذية العضوية، ومستلزمات اللياقة المتاحة لدى الرشاقة والقوة.
             </p>
-            <div className="pt-3">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={handleNavigateToShop}
-                className="min-h-[48px] px-8 py-3 bg-[#1257D6] hover:bg-[#1B64EB] active:bg-[#0E46AF] text-[#FFFFFF] font-semibold text-sm sm:text-base rounded-xl transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] select-none"
+                className="min-h-[52px] px-9 py-3.5 bg-[#1257D6] hover:bg-[#0E46AF] active:bg-[#0C3B94] text-[#FFFFFF] font-bold text-base rounded-xl transition-colors inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6] focus-visible:ring-offset-2 select-none"
               >
-                <span>تصفح المتجر</span>
-                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                تصفح المتجر
               </button>
             </div>
           </div>
