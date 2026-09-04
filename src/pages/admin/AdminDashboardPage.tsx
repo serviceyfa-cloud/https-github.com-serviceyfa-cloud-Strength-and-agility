@@ -1,195 +1,259 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  LayoutGrid,
   Package,
+  Plus,
   Tags,
-  ShoppingBag,
-  Users,
-  Percent,
-  FileText,
   Image as ImageIcon,
+  ShoppingBag,
+  Receipt,
   Settings,
-  Search,
+  ArrowLeft,
+  Server,
+  CreditCard,
+  FileCheck,
   ShieldCheck,
-  Menu,
-  X,
+  Store,
   ExternalLink,
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/common/Card';
 
-export type AdminSectionId =
-  | 'overview'
-  | 'products'
-  | 'categories'
-  | 'orders'
-  | 'customers'
-  | 'promotions'
-  | 'content'
-  | 'media'
-  | 'settings'
-  | 'seo'
-  | 'permissions';
-
-interface NavItem {
-  id: AdminSectionId;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { id: 'overview', label: 'الرئيسية', icon: LayoutGrid },
-  { id: 'products', label: 'المنتجات', icon: Package },
-  { id: 'categories', label: 'التصنيفات', icon: Tags },
-  { id: 'orders', label: 'الطلبات', icon: ShoppingBag },
-  { id: 'customers', label: 'العملاء', icon: Users },
-  { id: 'promotions', label: 'العروض والكوبونات', icon: Percent },
-  { id: 'content', label: 'المحتوى', icon: FileText },
-  { id: 'media', label: 'الصور والوسائط', icon: ImageIcon },
-  { id: 'settings', label: 'إعدادات المتجر', icon: Settings },
-  { id: 'seo', label: 'SEO', icon: Search },
-  { id: 'permissions', label: 'المستخدمون والصلاحيات', icon: ShieldCheck },
-];
-
 export interface AdminDashboardPageProps {
+  onNavigate: (href: string) => void;
   onNavigateToStore?: () => void;
 }
 
+interface ManagementModule {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+  actionLabel: string;
+  statusBadge: string;
+}
+
+const MODULES: ManagementModule[] = [
+  {
+    id: 'products',
+    title: 'المنتجات والمخزون',
+    description: 'إدارة كتالوج المنتجات، الأسعار، المواصفات، وتحديث حالات التوفر.',
+    href: '/admin/products',
+    icon: Package,
+    actionLabel: 'إدارة المنتجات',
+    statusBadge: 'جاهز للإضافة',
+  },
+  {
+    id: 'categories',
+    title: 'تصنيفات المتجر',
+    description: 'تنظيم أقسام المتجر (المكملات، البروتينات، الفيتامينات) وتحديد الهيكل.',
+    href: '/admin/categories',
+    icon: Tags,
+    actionLabel: 'إدارة التصنيفات',
+    statusBadge: 'الهيكل مهيأ',
+  },
+  {
+    id: 'media',
+    title: 'الوسائط والصور',
+    description: 'مكتبة الأصول المرئية وصور المنتجات لضمان جودة العرض البصري.',
+    href: '/admin/media',
+    icon: ImageIcon,
+    actionLabel: 'مكتبة الوسائط',
+    statusBadge: 'مكتبة فارغة',
+  },
+  {
+    id: 'orders',
+    title: 'سجل الطلبات',
+    description: 'متابعة ومعالجة الطلبات الواردة من العملاء وحالات الدفع والشحن.',
+    href: '/admin/orders',
+    icon: ShoppingBag,
+    actionLabel: 'استعراض الطلبات',
+    statusBadge: '0 طلبات',
+  },
+  {
+    id: 'invoices',
+    title: 'الفواتير والفوترة',
+    description: 'سجلات الفواتير الضريبية وتجهيز الربط مع منظومة الفوترة الإلكترونية.',
+    href: '/admin/invoices',
+    icon: Receipt,
+    actionLabel: 'استعراض الفواتير',
+    statusBadge: '0 فواتير',
+  },
+  {
+    id: 'settings',
+    title: 'إعدادات المتجر',
+    description: 'تعديل البيانات الأساسية، هوية المتجر، خيارات التواصل والتسليم.',
+    href: '/admin/settings',
+    icon: Settings,
+    actionLabel: 'ضبط الإعدادات',
+    statusBadge: 'بيانات أولية',
+  },
+];
+
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
+  onNavigate,
   onNavigateToStore,
 }) => {
-  const [activeSection, setActiveSection] = useState<AdminSectionId>('overview');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const currentNav = NAV_ITEMS.find((item) => item.id === activeSection) || NAV_ITEMS[0];
-
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#161A18] flex flex-col select-none" dir="rtl">
-      {/* شريط الإدارة العلوي (Admin Topbar) */}
-      <header className="h-16 bg-[#FFFFFF] border-b border-[#E5E1DA] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          {/* زر القائمة للشاشات الصغيرة */}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden min-w-[48px] min-h-[48px] p-2.5 inline-flex items-center justify-center rounded-lg text-[#161A18] hover:bg-[#EBF3EF] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]"
-            aria-label={isMobileMenuOpen ? 'إغلاق قائمة الإدارة' : 'فتح قائمة الإدارة'}
-          >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
-          <div className="flex items-center gap-2.5">
-            <span className="text-base font-bold text-[#161A18] tracking-tight">
-              لوحة تحكم المتجر
+    <div className="w-full max-w-6xl mx-auto space-y-8 text-start" dir="rtl">
+      {/* ترويسة لوحة الإدارة */}
+      <header className="pb-6 border-b border-[#E2E8F0] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
+              الرئيسية — لوحة الإدارة
+            </h1>
+            <span className="text-xs px-3 py-1 rounded-full font-bold bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE]">
+              متجر الرشاقة والقوة
             </span>
           </div>
+          <p className="text-sm text-[#64748B] max-w-2xl leading-relaxed">
+            مركز العمليات وإدارة الكتالوج التجاري. يمكنك الوصول المباشر لكافة أقسام المتجر من هذه اللوحة.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {onNavigateToStore ? (
+        {/* أزرار سريعة رئيسية */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => onNavigate('/admin/products/new')}
+            className="min-h-[44px] px-4 py-2.5 bg-[#1257D6] hover:bg-[#0E46AF] active:bg-[#0C3B94] text-[#FFFFFF] font-bold text-xs sm:text-sm rounded-xl transition-colors inline-flex items-center gap-2 select-none shadow-none"
+          >
+            <Plus className="w-4 h-4" aria-hidden="true" />
+            <span>إضافة منتج جديد</span>
+          </button>
+
+          {onNavigateToStore && (
             <button
               type="button"
               onClick={onNavigateToStore}
-              className="min-h-[48px] inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-[#4B534E] hover:text-[#161A18] transition-colors px-3 py-2 rounded-lg hover:bg-[#EBF3EF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]"
+              className="min-h-[44px] px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#0F172A] font-semibold text-xs sm:text-sm rounded-xl border border-[#E2E8F0] transition-colors inline-flex items-center gap-2 select-none"
             >
+              <Store className="w-4 h-4 text-[#64748B]" aria-hidden="true" />
               <span>عرض المتجر</span>
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
             </button>
-          ) : (
-            <a
-              href="/"
-              className="min-h-[48px] inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-[#4B534E] hover:text-[#161A18] transition-colors px-3 py-2 rounded-lg hover:bg-[#EBF3EF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736]"
-            >
-              <span>عرض المتجر</span>
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-            </a>
           )}
         </div>
       </header>
 
-      {/* الهيكل الرئيسي (Sidebar + Main Content Area) */}
-      <div className="flex-1 flex w-full relative">
-        {/* خلفية معتمة للجوال عند فتح القائمة */}
-        {isMobileMenuOpen && (
-          <div
-            className="fixed inset-x-0 top-16 bottom-0 bg-black/25 z-40 lg:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-        )}
+      {/* أقسام الإدارة الحقيقية المعتمدة */}
+      <section aria-labelledby="modules-heading" className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 id="modules-heading" className="text-lg font-bold text-[#0F172A] tracking-tight">
+            أقسام إدارة المتجر
+          </h2>
+          <span className="text-xs text-[#64748B]">
+            6 أقسام تشغيلية رئيسية
+          </span>
+        </div>
 
-        {/* الشريط الجانبي (Sidebar Navigation) */}
-        <aside
-          className={`fixed lg:static top-16 bottom-0 start-0 z-40 w-64 bg-[#FFFFFF] border-e border-[#E5E1DA] flex flex-col justify-between overflow-y-auto transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
-          }`}
-        >
-          <nav className="p-3 space-y-1" aria-label="أقسام لوحة التحكم">
-            {NAV_ITEMS.map((item) => {
-              const Icon = item.icon;
-              const isActive = item.id === activeSection;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {MODULES.map((module) => {
+            const Icon = module.icon;
+            return (
+              <div
+                key={module.id}
+                className="bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#CBD5E1] rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-colors text-start"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="w-11 h-11 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1257D6] flex items-center justify-center">
+                      <Icon className="w-5 h-5" aria-hidden="true" />
+                    </div>
+                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-[#F8FAFC] text-[#64748B] border border-[#E2E8F0]">
+                      {module.statusBadge}
+                    </span>
+                  </div>
 
-              return (
+                  <h3 className="text-base font-bold text-[#0F172A] mb-1.5">
+                    {module.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed mb-6">
+                    {module.description}
+                  </p>
+                </div>
+
                 <button
-                  key={item.id}
                   type="button"
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full min-h-[48px] flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A4736] ${
-                    isActive
-                      ? 'bg-[#1A4736] text-[#FAF8F5]'
-                      : 'text-[#4B534E] hover:bg-[#EBF3EF] hover:text-[#161A18]'
-                  }`}
+                  onClick={() => onNavigate(module.href)}
+                  className="w-full min-h-[44px] px-4 py-2 bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#1257D6] font-bold text-xs sm:text-sm rounded-xl border border-[#E2E8F0] hover:border-[#BFDBFE] transition-colors inline-flex items-center justify-between select-none"
                 >
-                  <Icon
-                    className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#FAF8F5]' : 'text-[#4B534E]'}`}
-                    aria-hidden="true"
-                  />
-                  <span>{item.label}</span>
+                  <span>{module.actionLabel}</span>
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" />
                 </button>
-              );
-            })}
-          </nav>
-
-          <div className="p-4 border-t border-[#E5E1DA] text-start">
-            <p className="text-xs font-semibold text-[#161A18]">إدارة المتجر</p>
-            <p className="text-[11px] text-[#4B534E] mt-0.5">الرشاقة والقوة</p>
-          </div>
-        </aside>
-
-        {/* منطقة المحتوى الرئيسية */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
-          <div className="max-w-6xl mx-auto space-y-6">
-            {/* ترويسة القسم النشط */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-5 border-b border-[#E5E1DA]">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-[#161A18] tracking-tight">
-                  {currentNav.label}
-                </h1>
-                <p className="text-xs sm:text-sm text-[#4B534E] mt-1">
-                  إدارة وتنظيم بيانات قسم {currentNav.label} في المتجر.
-                </p>
               </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* بطاقة الشفافية التقنية والجاهزية المعمارية (بدون أرقام أو إحصائيات وهمية) */}
+      <section aria-labelledby="readiness-heading">
+        <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+          <CardContent className="p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-2 pb-4 border-b border-[#E2E8F0]">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#1257D6]" aria-hidden="true" />
+                <h2 id="readiness-heading" className="text-base font-bold text-[#0F172A]">
+                  حالة الجاهزية التشغيلية والتكامل
+                </h2>
+              </div>
+              <span className="text-xs font-semibold text-[#64748B]">
+                تقرير حالة الأنظمة
+              </span>
             </div>
 
-            {/* بطاقة عرض محتوى القسم (Empty State النظيف) */}
-            <Card className="bg-[#FFFFFF] border-[#E5E1DA] rounded-xl">
-              <CardContent className="py-16 sm:py-20 px-4 text-center">
-                <div className="w-12 h-12 rounded-xl bg-[#EBF3EF] flex items-center justify-center mx-auto mb-3 text-[#1A4736]">
-                  <currentNav.icon className="w-6 h-6" aria-hidden="true" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* 1. خادم البيانات */}
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
+                  <Server className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
+                  <span>قاعدة البيانات / Backend</span>
                 </div>
-                <h2 className="text-base sm:text-lg font-semibold text-[#161A18] mb-1">
-                  قسم {currentNav.label}
-                </h2>
-                <p className="text-xs sm:text-sm text-[#4B534E] max-w-md mx-auto leading-relaxed">
-                  لا توجد عناصر مضافة حالياً ضمن هذا القسم.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
-      </div>
+                <div className="text-xs text-[#64748B] mt-1">
+                  <span className="font-semibold text-[#94A3B8] block">غير متصل</span>
+                  يتطلب ربط API لحفظ المنتجات
+                </div>
+              </div>
+
+              {/* 2. بوابة الدفع */}
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
+                  <CreditCard className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
+                  <span>بوابة الدفع الإلكتروني</span>
+                </div>
+                <div className="text-xs text-[#64748B] mt-1">
+                  <span className="font-semibold text-[#94A3B8] block">بانتظار التهيئة</span>
+                  يتطلب مزود دفع معتمد (Mada/Visa)
+                </div>
+              </div>
+
+              {/* 3. الفوترة الإلكترونية */}
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
+                  <FileCheck className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
+                  <span>الفوترة الإلكترونية</span>
+                </div>
+                <div className="text-xs text-[#64748B] mt-1">
+                  <span className="font-semibold text-[#94A3B8] block">الهيكل جاهز</span>
+                  يتطلب التكامل مع مزود الفوترة
+                </div>
+              </div>
+
+              {/* 4. المصادقة */}
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
+                  <ShieldCheck className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
+                  <span>مصادقة المسؤول</span>
+                </div>
+                <div className="text-xs text-[#64748B] mt-1">
+                  <span className="font-semibold text-[#1257D6] block">جلسة معاينة نشطة</span>
+                  تتطلب Auth Server للإنتاج
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };

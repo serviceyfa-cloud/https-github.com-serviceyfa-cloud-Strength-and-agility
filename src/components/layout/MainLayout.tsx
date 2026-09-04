@@ -81,7 +81,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, currentPath = 
     <div
       dir={STORE_CONFIG.direction}
       lang={STORE_CONFIG.locale}
-      className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#161A18] min-w-[360px]"
+      className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#0F172A] min-w-[360px]"
     >
       {/* ========================================================================= */}
       {/* Header الرئيسي للمتجر (يعرض ملاحة أفقية للشاشات الكبيرة + أدوات المتجر) */}
