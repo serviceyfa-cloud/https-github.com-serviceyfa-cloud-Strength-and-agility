@@ -29,18 +29,20 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
       const hash = href.split('#')[1];
       if (currentPath !== '/shop' && currentPath !== '/') {
         if (navigate) {
-          navigate('/shop');
+          navigate(href);
         } else {
-          window.history.pushState({}, '', '/shop');
+          window.history.pushState({}, '', href);
           window.dispatchEvent(new PopStateEvent('popstate'));
         }
-      }
-      setTimeout(() => {
-        const element = document.getElementById(hash);
+      } else {
+        const element = typeof document !== 'undefined' ? document.getElementById(hash) : null;
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
+          if (window.location.hash !== `#${hash}`) {
+            window.history.pushState({}, '', href);
+          }
         }
-      }, 100);
+      }
       return;
     }
 
@@ -57,11 +59,21 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/shop', navigate 
       return currentPath === '/' && (typeof window === 'undefined' || !window.location.hash);
     }
     if (href === '/shop') {
-      return currentPath === '/shop' && (typeof window === 'undefined' || !window.location.hash);
+      return (
+        currentPath === '/shop' &&
+        (typeof window === 'undefined' ||
+          !window.location.hash ||
+          !(typeof document !== 'undefined' && document.getElementById(window.location.hash.slice(1))))
+      );
     }
     if (href.startsWith('/shop#')) {
       const hash = href.split('#')[1];
-      return typeof window !== 'undefined' && window.location.hash === `#${hash}`;
+      return (
+        currentPath === '/shop' &&
+        typeof window !== 'undefined' &&
+        window.location.hash === `#${hash}` &&
+        Boolean(typeof document !== 'undefined' && document.getElementById(hash))
+      );
     }
     return currentPath === href;
   };

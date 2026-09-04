@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { MainLayout } from './components/layout/MainLayout';
 import { Badge } from './components/common/Badge';
-import { ExternalLink } from 'lucide-react';
+import { Container } from './components/common/Container';
+import { Button } from './components/common/Button';
+import { ExternalLink, ShoppingBag } from 'lucide-react';
 import { cn } from './utils/cn';
 
 // الصفحات الموجودة فعلياً في المشروع
@@ -33,6 +35,40 @@ const normalizePath = (path: string): string => {
     return clean.slice(0, -1);
   }
   return clean || '/';
+};
+
+interface CartPageProps {
+  onNavigateToShop: () => void;
+}
+
+const CartPage: React.FC<CartPageProps> = ({ onNavigateToShop }) => {
+  return (
+    <div className="w-full py-10 sm:py-20 flex-1 flex items-center">
+      <Container>
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-[#FFFFFF] border border-[#E5E1DA] rounded-2xl p-8 sm:p-12">
+            <div className="w-16 h-16 rounded-2xl bg-[#141414] border border-[#262626] text-[#D89B12] flex items-center justify-center mx-auto mb-5">
+              <ShoppingBag className="w-8 h-8" aria-hidden="true" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#161A18] mb-2 tracking-tight">
+              سلة المشتريات
+            </h1>
+            <p className="text-sm text-[#4B534E] mb-6 leading-relaxed">
+              سلتك فارغة حالياً. تصفح تشكيلتنا من المنتجات الصحية والرياضية لإضافة ما يناسبك.
+            </p>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={onNavigateToShop}
+              className="min-w-[160px]"
+            >
+              تصفح المتجر
+            </Button>
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
 };
 
 interface AdminLayoutProps {
@@ -114,18 +150,38 @@ export default function App() {
   );
 
   const navigate = useCallback((to: string) => {
-    const normalized = normalizePath(to);
-    if (window.location.pathname !== normalized) {
-      window.history.pushState({}, '', normalized);
+    const [pathPart, hashPart] = to.split('#');
+    const normalized = normalizePath(pathPart);
+    const fullTarget = hashPart ? `${normalized}#${hashPart}` : normalized;
+
+    if (window.location.pathname !== normalized || (hashPart && window.location.hash !== `#${hashPart}`)) {
+      window.history.pushState({}, '', fullTarget);
     }
     setCurrentPath(normalized);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (hashPart) {
+      setTimeout(() => {
+        const element = document.getElementById(hashPart);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   // الاستماع لأحداث الرجوع والتقدم في المتصفح
   useEffect(() => {
     const handlePopState = () => {
       setCurrentPath(normalizePath(window.location.pathname));
+      if (window.location.hash) {
+        const hash = window.location.hash.slice(1);
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -264,6 +320,13 @@ export default function App() {
           <AdminLayout currentPath={currentPath} navigate={navigate}>
             <StoreSettingsPage />
           </AdminLayout>
+        );
+
+      case '/cart':
+        return (
+          <MainLayout currentPath={currentPath} navigate={navigate}>
+            <CartPage onNavigateToShop={() => navigate('/shop')} />
+          </MainLayout>
         );
 
       case '/':
