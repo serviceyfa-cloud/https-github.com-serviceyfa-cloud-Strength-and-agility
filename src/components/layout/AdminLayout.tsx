@@ -11,8 +11,6 @@ import {
   ExternalLink,
   Menu,
   X,
-  Layers,
-  AlertCircle,
 } from 'lucide-react';
 import { STORE_CONFIG } from '../../constants/config';
 import { cn } from '../../utils/cn';
@@ -58,21 +56,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       dir="rtl"
       className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans select-none"
     >
-      {/* الشريط الإخباري الشفاف: توضيح طبيعة الواجهة وفصلها عن المصادقة */}
-      <div className="w-full bg-[#FFFFFF] border-b border-[#E2E8F0] px-4 py-2 text-start">
-        <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2 text-xs">
-          <div className="flex items-center gap-2 text-[#475569]">
-            <AlertCircle className="w-4 h-4 text-[#1257D6] shrink-0" aria-hidden="true" />
-            <span>
-              <strong>حالة النظام:</strong> واجهة مستخدم للإدارة (UI Only) — بانتظار ربط خادم المصادقة وقواعد البيانات الفعلي.
-            </span>
-          </div>
-          <span className="text-[11px] px-2 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0] font-medium">
-            غير مفعل أمنياً للإنتاج
-          </span>
-        </div>
-      </div>
-
       {/* الشريط العلوي للإدارة (Admin Topbar) */}
       <header className="sticky top-0 z-40 w-full bg-[#FFFFFF] border-b border-[#E2E8F0] px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 max-w-7xl mx-auto gap-3">
@@ -97,7 +80,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 {STORE_CONFIG.name}
               </span>
               <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE]">
-                إدارة المتجر
+                لوحة الإدارة
               </span>
             </div>
           </div>
@@ -130,13 +113,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* الشريط الجانبي (Sidebar Navigation) */}
         <aside
           className={cn(
-            'fixed lg:sticky top-[calc(4rem+2.25rem)] bottom-0 start-0 z-40 w-64 bg-[#FFFFFF] border-e border-[#E2E8F0] flex flex-col justify-between overflow-y-auto transition-transform duration-200 ease-in-out lg:translate-x-0 h-[calc(100vh-6.25rem)]',
+            'fixed lg:sticky top-16 bottom-0 start-0 z-40 w-64 bg-[#FFFFFF] border-e border-[#E2E8F0] flex flex-col justify-between overflow-y-auto transition-transform duration-200 ease-in-out lg:translate-x-0 h-[calc(100vh-4rem)]',
             isMobileMenuOpen ? 'translate-x-0 shadow-lg' : 'translate-x-full lg:translate-x-0'
           )}
         >
           <div className="p-3 space-y-1">
             <div className="px-3 py-2 text-[11px] font-bold text-[#94A3B8] tracking-wider uppercase">
-              أقسام الإدارة الأساسية
+              أقسام الإدارة
             </div>
 
             <nav className="space-y-1" aria-label="أقسام لوحة التحكم">
@@ -152,7 +135,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     className={cn(
                       'w-full min-h-[48px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1257D6]',
                       isActive
-                        ? 'bg-[#EFF6FF] text-[#1257D6] font-bold border-s-4 border-[#1257D6]'
+                        ? 'bg-[#EFF6FF] text-[#1257D6] font-bold'
                         : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
                     )}
                     aria-current={isActive ? 'page' : undefined}
@@ -171,14 +154,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             </nav>
           </div>
 
-          {/* تذييل الشريط الجانبي: شفافية معمارية حول وضع الـ UI وعدم وجود مصادقة بعد */}
-          <div className="p-4 border-t border-[#E2E8F0] bg-[#F8FAFC] text-start">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
-              <Layers className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
-              <span>واجهة إدارية (UI Only)</span>
+          {/* تذييل الشريط الجانبي الهادئ والمهني */}
+          <div className="p-4 border-t border-[#E2E8F0] bg-[#FFFFFF] text-start">
+            <div className="text-xs font-bold text-[#0F172A]">
+              لوحة تحكم المتجر
             </div>
-            <p className="text-[11px] text-[#64748B] leading-relaxed">
-              بانتظار ربط خادم المصادقة المركزي (Backend Auth API).
+            <p className="text-[11px] text-[#64748B] mt-0.5">
+              الإصدار 1.0
             </p>
           </div>
         </aside>

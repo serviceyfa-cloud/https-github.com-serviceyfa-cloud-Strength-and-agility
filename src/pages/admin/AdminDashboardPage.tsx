@@ -8,14 +8,11 @@ import {
   Receipt,
   Settings,
   ArrowLeft,
-  Server,
-  CreditCard,
-  FileCheck,
-  ShieldAlert,
   Store,
-  CheckCircle2,
+  Inbox,
+  Boxes,
 } from 'lucide-react';
-import { Card, CardContent } from '../../components/common/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/common/Card';
 
 export interface AdminDashboardPageProps {
   onNavigate: (href: string) => void;
@@ -29,45 +26,40 @@ interface ManagementModule {
   href: string;
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   actionLabel: string;
-  systemStatus: string;
 }
 
 const MODULES: ManagementModule[] = [
   {
     id: 'products',
     title: 'المنتجات والمخزون',
-    description: 'إدارة كتالوج المنتجات، الأسعار، المواصفات، وتحديث حالات التوفر.',
+    description: 'إدارة كتالوج المنتجات، الأسعار، المواصفات، وتحديث كميات المخزون.',
     href: '/admin/products',
     icon: Package,
     actionLabel: 'إدارة المنتجات',
-    systemStatus: 'لا توجد بيانات متصلة حاليًا',
   },
   {
     id: 'orders',
-    title: 'سجل ومعالجة الطلبات',
+    title: 'سجل الطلبات',
     description: 'متابعة ومعالجة الطلبات الواردة من العملاء وحالات الدفع والشحن.',
     href: '/admin/orders',
     icon: ShoppingBag,
     actionLabel: 'سجل الطلبات',
-    systemStatus: 'بانتظار اتصال مصدر البيانات',
   },
   {
     id: 'invoices',
-    title: 'الفواتير والامتثال المالي',
-    description: 'سجلات الفواتير الضريبية وتجهيز الربط مع منظومة الفوترة الإلكترونية.',
+    title: 'الفواتير والمالية',
+    description: 'استعراض سجلات الفواتير والعمليات المالية المرتبطة بالطلبات.',
     href: '/admin/invoices',
     icon: Receipt,
     actionLabel: 'سجل الفواتير',
-    systemStatus: 'بانتظار نظام الفوترة الحقيقي',
   },
   {
     id: 'categories',
     title: 'تصنيفات المتجر',
-    description: 'تنظيم أقسام المتجر (المكملات، الأغذية العضوية، الفيتامينات).',
+    description: 'تنظيم أقسام المتجر (المكملات الغذائية، الأغذية العضوية، الفيتامينات).',
     href: '/admin/categories',
     icon: Tags,
     actionLabel: 'إدارة التصنيفات',
-    systemStatus: 'بانتظار اتصال قاعدة البيانات',
   },
   {
     id: 'media',
@@ -76,7 +68,6 @@ const MODULES: ManagementModule[] = [
     href: '/admin/media',
     icon: ImageIcon,
     actionLabel: 'مكتبة الوسائط',
-    systemStatus: 'بانتظار خادم التخزين السحابي',
   },
   {
     id: 'settings',
@@ -85,7 +76,6 @@ const MODULES: ManagementModule[] = [
     href: '/admin/settings',
     icon: Settings,
     actionLabel: 'إعدادات المتجر',
-    systemStatus: 'واجهة إعدادات محلية',
   },
 ];
 
@@ -100,14 +90,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         <div>
           <div className="flex items-center gap-2.5 mb-1.5">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
-              لوحة الإدارة الرئيسية
+              لوحة الإدارة
             </h1>
-            <span className="text-xs px-3 py-1 rounded-md font-bold bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE]">
+            <span className="text-xs px-2.5 py-0.5 rounded-md font-bold bg-[#EFF6FF] text-[#1257D6] border border-[#BFDBFE]">
               متجر الرشاقة والقوة
             </span>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] max-w-2xl leading-relaxed">
-            مركز العمليات الإدارية للمتجر التجاري. يمكنك الوصول المباشر لكافة الأقسام والوظائف التنفيذية.
+            الوصول المباشر إلى وظائف إدارة المتجر والمنتجات والطلبات والسجلات.
           </p>
         </div>
 
@@ -135,10 +125,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         </div>
       </header>
 
-      {/* أقسام الإدارة التجارية المعتمدة */}
+      {/* أقسام الإدارة الأساسية */}
       <section aria-labelledby="modules-heading" className="space-y-4">
         <h2 id="modules-heading" className="text-base font-bold text-[#0F172A] tracking-tight">
-          أقسام إدارة المتجر
+          أقسام المتجر
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -147,16 +137,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             return (
               <div
                 key={module.id}
-                className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 flex flex-col justify-between text-start"
+                className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 flex flex-col justify-between text-start hover:border-[#CBD5E1] transition-colors"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1257D6] flex items-center justify-center">
-                      <Icon className="w-5 h-5" aria-hidden="true" />
-                    </div>
-                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-[#F8FAFC] text-[#475569] border border-[#E2E8F0]">
-                      {module.systemStatus}
-                    </span>
+                  <div className="w-11 h-11 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1257D6] flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5" aria-hidden="true" />
                   </div>
 
                   <h3 className="text-base font-bold text-[#0F172A] mb-1.5">
@@ -181,74 +166,75 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         </div>
       </section>
 
-      {/* تقرير حالة التكامل والأنظمة الفنية (بدون أي أرقام أو إحصائيات وهمية) */}
-      <section aria-labelledby="status-heading">
+      {/* حالات الفراغ لنشاط المتجر (بدون أرقام أو بيانات وهمية) */}
+      <section aria-labelledby="activity-heading" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* حالة الطلبات الحديثة */}
         <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
-          <CardContent className="p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between flex-wrap gap-2 pb-4 border-b border-[#E2E8F0]">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#1257D6]" aria-hidden="true" />
-                <h2 id="status-heading" className="text-base font-bold text-[#0F172A]">
-                  حالة التكامل والأنظمة الفنية
-                </h2>
-              </div>
-              <span className="text-xs font-semibold text-[#64748B]">
-                تقرير شفافية النظام
-              </span>
+          <CardHeader className="border-b border-[#E2E8F0] pb-3.5 flex flex-row items-center justify-between">
+            <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
+              الطلبات الحديثة
+            </CardTitle>
+            <button
+              type="button"
+              onClick={() => onNavigate('/admin/orders')}
+              className="text-xs font-semibold text-[#1257D6] hover:underline"
+            >
+              عرض الكل
+            </button>
+          </CardHeader>
+          <CardContent className="p-8 text-center">
+            <div className="w-12 h-12 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] flex items-center justify-center mx-auto mb-3">
+              <Inbox className="w-6 h-6" aria-hidden="true" />
             </div>
+            <p className="text-sm font-bold text-[#0F172A] mb-1">
+              لا توجد طلبات جديدة حالياً
+            </p>
+            <p className="text-xs text-[#64748B] max-w-xs mx-auto leading-relaxed">
+              ستظهر الطلبات الواردة فور إتمام العملاء لعمليات الشراء عبر المتجر.
+            </p>
+          </CardContent>
+        </Card>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* 1. قاعدة البيانات والـ Backend */}
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
-                  <Server className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
-                  <span>قاعدة البيانات / Backend</span>
-                </div>
-                <div className="text-xs text-[#64748B] mt-1.5 space-y-0.5">
-                  <span className="font-bold text-[#0F172A] block">غير متصل</span>
-                  <p className="text-[11px] text-[#64748B]">يتطلب ربط واجهة برمجة التطبيقات (API)</p>
-                </div>
-              </div>
-
-              {/* 2. التحقق والمصادقة */}
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
-                  <ShieldAlert className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
-                  <span>نظام المصادقة (Auth)</span>
-                </div>
-                <div className="text-xs text-[#64748B] mt-1.5 space-y-0.5">
-                  <span className="font-bold text-[#0F172A] block">غير مهيأ أمنياً</span>
-                  <p className="text-[11px] text-[#64748B]">واجهة مستخدم فقط بانتظار خادم المصادقة</p>
-                </div>
-              </div>
-
-              {/* 3. بوابة الدفع الإلكتروني */}
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
-                  <CreditCard className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
-                  <span>بوابة الدفع الإلكتروني</span>
-                </div>
-                <div className="text-xs text-[#64748B] mt-1.5 space-y-0.5">
-                  <span className="font-bold text-[#0F172A] block">بانتظار التهيئة</span>
-                  <p className="text-[11px] text-[#64748B]">يتطلب التعاقد والربط مع مزود دفع معتمد</p>
-                </div>
-              </div>
-
-              {/* 4. الفوترة الإلكترونية */}
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A] mb-1">
-                  <FileCheck className="w-4 h-4 text-[#1257D6]" aria-hidden="true" />
-                  <span>الفوترة الإلكترونية</span>
-                </div>
-                <div className="text-xs text-[#64748B] mt-1.5 space-y-0.5">
-                  <span className="font-bold text-[#0F172A] block">الهيكل البرمجي مهيأ</span>
-                  <p className="text-[11px] text-[#64748B]">يتطلب التكامل مع مزود الفوترة المعتمد</p>
-                </div>
-              </div>
+        {/* حالة المنتجات والمخزون */}
+        <Card className="bg-[#FFFFFF] border-[#E2E8F0] rounded-2xl shadow-none">
+          <CardHeader className="border-b border-[#E2E8F0] pb-3.5 flex flex-row items-center justify-between">
+            <CardTitle as="h2" className="text-base font-bold text-[#0F172A]">
+              كتالوج المنتجات
+            </CardTitle>
+            <button
+              type="button"
+              onClick={() => onNavigate('/admin/products')}
+              className="text-xs font-semibold text-[#1257D6] hover:underline"
+            >
+              إدارة المنتجات
+            </button>
+          </CardHeader>
+          <CardContent className="p-8 text-center">
+            <div className="w-12 h-12 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] flex items-center justify-center mx-auto mb-3">
+              <Boxes className="w-6 h-6" aria-hidden="true" />
             </div>
+            <p className="text-sm font-bold text-[#0F172A] mb-1">
+              جاهز لإدارة المخزون
+            </p>
+            <p className="text-xs text-[#64748B] max-w-xs mx-auto leading-relaxed mb-4">
+              يمكنك إضافة منتجات جديدة أو تعديل المنتجات الحالية من قسم المنتجات.
+            </p>
+            <button
+              type="button"
+              onClick={() => onNavigate('/admin/products/new')}
+              className="min-h-[40px] px-4 py-2 bg-[#1257D6] text-[#FFFFFF] text-xs font-bold rounded-xl hover:bg-[#0E46AF] transition-colors inline-flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>إضافة منتج</span>
+            </button>
           </CardContent>
         </Card>
       </section>
+
+      {/* ملاحظة معمارية تقنية موجزة وهادئة للمطور */}
+      <footer className="pt-2 text-center text-xs text-[#64748B]">
+        <span>نظام الإدارة الداخلي — يتطلب الربط الحي اتصال خادم المصادقة وقاعدة البيانات</span>
+      </footer>
     </div>
   );
 };

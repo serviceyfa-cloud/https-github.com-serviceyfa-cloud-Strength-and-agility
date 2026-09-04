@@ -10,6 +10,7 @@ import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
 
 // صفحات لوحة الإدارة
+import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
 import { ProductEditorPage } from './pages/admin/ProductEditorPage';
@@ -162,10 +163,20 @@ export default function App() {
   // التحقق مما إذا كان المسار يتبع منطقة الإدارة
   const isAdminRoute = currentPath.startsWith('/admin');
 
+  // حالة المصادقة الإدارية المعمارية
+  // في هذه المرحلة لا يوجد Backend Auth، لذا القيمة false دائماً ولا يوجد تجاوز تجريبي
+  const [isAdminAuthenticated] = useState<boolean>(false);
+
   // تحديد الصفحة المعروضة بناءً على المسار
   const renderContent = () => {
-    // 1. مسارات الإدارة (تستخدم AdminLayout المستقل وتوضح حالة الـ UI دون مصادقة وهمية)
+    // 1. مسارات الإدارة (منطقة محمية معمارياً)
     if (isAdminRoute) {
+      // حجب لوحة الإدارة وعرض بوابة الدخول إذا لم تكن هناك مصادقة حقيقية
+      if (!isAdminAuthenticated) {
+        return <AdminLoginPage onNavigateHome={() => navigate('/')} />;
+      }
+
+      // في حال توفر مصادقة حقيقية مستقبلاً، يُسمح بالوصول إلى لوحة الإدارة
       switch (currentPath) {
         case '/admin':
           return (
